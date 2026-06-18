@@ -1,70 +1,149 @@
-# Getting Started with Create React App
+# 外國學生招生審查平台
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+這是一套外國學生招生審查平台，提供申請資料匯入、面試排程、教師評分、排名分析與錄取建議等流程。
 
-## Available Scripts
+## Required Environment
 
-In the project directory, you can run:
+- Node.js
+- Python 3.10+
 
-### `npm start`
+## Main Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Excel import/export
+- application management
+- interview scheduling
+- interview notification export
+- teacher scoring
+- ranking analysis
+- admission recommendation
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Login Accounts
 
-### `npm test`
+| Role | Username | Password |
+| --- | --- | --- |
+| Admin | `admin` | `admin123` |
+| Teacher | `teacher01` | `123456` |
+| Teacher | `teacher02` | `123456` |
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Ports
 
-### `npm run build`
+- Backend port: `5006`
+- Frontend URL: `http://localhost:3000`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Install Dependencies
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Backend:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
 
-### `npm run eject`
+Frontend:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+npm install
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Reset Demo Users
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+This only creates or updates login users. It does not delete students, schedules, scores, or ranking data.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+cd backend
+source .venv/bin/activate
+python reset_users.py
+```
 
-## Learn More
+## Start Backend
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+cd backend
+source .venv/bin/activate
+python3 run.py
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+The backend runs at:
 
-### Code Splitting
+```text
+http://127.0.0.1:5006
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Start Frontend
 
-### Analyzing the Bundle Size
+Open a second terminal:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```bash
+npm start
+```
 
-### Making a Progressive Web App
+The frontend runs at:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```text
+http://localhost:3000
+```
 
-### Advanced Configuration
+## One-Command Start
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Mac/Linux:
 
-### Deployment
+```bash
+./start.sh
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Windows:
 
-### `npm run build` fails to minify
+```bat
+start.bat
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Notes
+
+- The frontend uses the React development proxy to call the backend on port `5006`.
+- The default database is SQLite at `backend/instance/app.db`.
+- Starting or resetting demo users will not delete database data.
+
+## Deploy To Railway
+
+This project can be deployed as one Railway web service. Flask serves both the `/api/...` backend routes and the production React build.
+
+1. Push this project to GitHub.
+2. In Railway, create a new project from the GitHub repository.
+3. Railway will use `railway.json` to run:
+
+```bash
+npm install
+npm run build
+python3 -m pip install -r backend/requirements.txt
+```
+
+4. Railway will start the app with:
+
+```bash
+cd backend && python3 run.py
+```
+
+5. Flask reads Railway's `PORT` environment variable automatically. Locally it still defaults to port `5006`.
+6. Open the public Railway URL. The website root `/` will show the React app, and API routes will continue to work under `/api/...`.
+
+Railway login accounts:
+
+- `admin` / `admin123`
+- `teacher01` / `123456`
+- `teacher02` / `123456`
+
+Useful local production check:
+
+```bash
+npm run build
+cd backend
+python3 run.py
+```
+
+Then open:
+
+```text
+http://127.0.0.1:5006
+```
